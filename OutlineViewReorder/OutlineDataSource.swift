@@ -11,7 +11,7 @@ import Cocoa
 let REORDER_PASTEBOARD_TYPE = "com.kinematicsystems.outline.item"
 
 extension ViewController: NSOutlineViewDataSource, NSPasteboardItemDataProvider {
-    
+
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         
         if item == nil
@@ -56,13 +56,14 @@ extension ViewController: NSOutlineViewDataSource, NSPasteboardItemDataProvider 
     // MARK: Drag & Drop
     func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
         let pbItem:NSPasteboardItem = NSPasteboardItem()
-        pbItem.setDataProvider(self, forTypes: [REORDER_PASTEBOARD_TYPE])
+//        pbItem.setDataProvider(self, forTypes: [REORDER_PASTEBOARD_TYPE])
+		pbItem.setDataProvider(self, forTypes: [NSPasteboard.PasteboardType.init(REORDER_PASTEBOARD_TYPE)])
         return pbItem
     }
     
     func outlineView(_ outlineView: NSOutlineView, draggingSession session: NSDraggingSession, willBeginAt screenPoint: NSPoint, forItems draggedItems: [Any]) {
         draggedNode = draggedItems[0] as AnyObject?
-        session.draggingPasteboard.setData(Data(), forType: REORDER_PASTEBOARD_TYPE)
+		session.draggingPasteboard.setData(Data(), forType: NSPasteboard.PasteboardType(rawValue: REORDER_PASTEBOARD_TYPE))
     }
     
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
@@ -153,10 +154,16 @@ extension ViewController: NSOutlineViewDataSource, NSPasteboardItemDataProvider 
     }
     
     // MARK: NSPasteboardItemDataProvider
-    func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String)
-    {
-        let s = "Outline Pasteboard Item"
-        item.setString(s, forType: type)
-    }
+//    func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: String)
+//    {
+//        let s = "Outline Pasteboard Item"
+//		item.setString(s, forType: NSPasteboard.PasteboardType(rawValue: type))
+//    }
+	
+	func pasteboard(_ pasteboard: NSPasteboard?, item: NSPasteboardItem, provideDataForType type: NSPasteboard.PasteboardType) {
+		let s = "Outline Pasteboard Item"
+		item.setString(s, forType: type)
+	}
+	
     
 }
